@@ -15,7 +15,7 @@ public class ConsumerWorker<T>
     public ConsumerWorker()
     {
         KubeMQServerAddress = "localhost";
-        _port = 9092;
+        _port = 50000;
         _queueName = "queue-dead-letter";
     }
 
@@ -32,9 +32,9 @@ public class ConsumerWorker<T>
     public async Task ConsumeAsync()
     {
         KubeMQServerAddress = "localhost";
-        
+
         var receiver = new KubeMQ.SDK.csharp.Queue.Queue("queue", "Csharp-sdk-cookbook-queues-stream-client",
-                KubeMQServerAddress);
+                KubeMQServerAddress + ":" + port);
         var transaction = receiver.CreateTransaction();
         KubeMQ.SDK.csharp.Queue.Stream.TransactionMessagesResponse resRec;
         try
