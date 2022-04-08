@@ -23,7 +23,6 @@ List<string> authorIds = new List<string>()
 
 Parallel.ForEach(authorIds, new ParallelOptions { MaxDegreeOfParallelism = 100 }, author =>
 {
-
     XDocument doc = XDocument.Load("https://www.c-sharpcorner.com/members/" + author + "/rss");
     if (doc == null)
     {
@@ -42,10 +41,18 @@ Parallel.ForEach(authorIds, new ParallelOptions { MaxDegreeOfParallelism = 100 }
 
     List<Feed> feeds = entries.OrderByDescending(o => o.PubDate).ToList();
     Console.WriteLine("Feeds Found, {0} for Author {1}", feeds.Count, author);
+
     for (int i = 0; i < feeds.Count; i++)
     {
-        var report = producer.ProduceAsync(feeds[i]).GetAwaiter().GetResult();
-        Console.WriteLine("Produced: {0}", report.Value);
+        try
+        {
+            var report = producer.ProduceAsync(feeds[i]).GetAwaiter().GetResult();
+            Console.WriteLine("Produced: {0}", report.Value);
+        catch (ProduceException<long, string> e)
+        {
+            Console.WriteLine($"Permanent error: {e.Message} for message (value: '{e.DeliveryResult.Value}')");
+            Console.WriteLine("Exiting producer...");
+        }
     }
 });
 
