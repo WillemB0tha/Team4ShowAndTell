@@ -1,35 +1,52 @@
-﻿using Confluent.Kafka;
+﻿using System.Text.Json;
+using Confluent.Kafka;
+using KubeMQ.SDK.csharp.Queue;
 
 namespace Producer;
 
 public class MQueuProducerWorker<T>
 {
-    readonly string? _host;
-    readonly int _port;
-    readonly string? _topic;
+    private readonly string _queueName;
+    private readonly string _clientID;
+    private readonly string _kubeMQServerAddress;
+
+    KubeMQ.SDK.csharp.Queue.Queue queue = null;
 
     public MQueuProducerWorker()
     {
-        _host = "localhost";
-        _port = 9092;
-        _topic = "producer_logs";
+        _queueName = "service_log";
+        _clientID = "TestClient";
+        _kubeMQServerAddress = "localhost:50000";
+
+        queue = new KubeMQ.SDK.csharp.Queue.Queue(_queueName, _clientID, _kubeMQServerAddress);
     }
 
-    ProducerConfig GetProducerConfig()
+    public async Task<SendMessageResult> ProduceAsync(T data)
     {
-        return new ProducerConfig
+        try
         {
-            BootstrapServers = $"{_host}:{_port}"
-        };
-    }
+            var dataStream = KubeMQ.SDK.csharp.Tools.Converter.ToByteArray(JsonSerializer.Serialize(data));
+            
+            var res = queue.SendQueueMessage(new KubeMQ.SDK.csharp.Queue.Message
+            {
+                Body = dataStream,
+                Metadata = "emptyMeta"
+            });
+            if (res.IsError)
+            {
+                Console.WriteLine($"message enqueue error, error:{res.Error}");
+            }
+            else
+            {
+                Console.WriteLine($"message sent at, {res.SentAt}");
+            }
 
-    public async Task<DeliveryResult<Null, T>> ProduceAsync(T data)
-    {
-        using (var producer = new ProducerBuilder<Null, T>(GetProducerConfig())
-                   .SetValueSerializer(new ValueSerializer<T>())
-                   .Build())
+            return res;
+        }
+        catch (Exception ex)
         {
-            return await producer.ProduceAsync(_topic, new Message<Null, T> { Value = data });
+            Console.WriteLine(ex.Message);
+            throw;
         }
     }
 }

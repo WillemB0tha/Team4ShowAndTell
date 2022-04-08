@@ -1,13 +1,14 @@
 ﻿using System.Globalization;
 using System.Net;
+using System.Text.Json;
 using System.Xml.Linq;
 using Confluent.Kafka;
 using HtmlAgilityPack;
 using Producer;
 
 var kafkaproducer = new KafkaProducerWorker<Feed>();
-var mqueueproducer = new KafkaProducerWorker<Feed>();
 var _memoryCache = new MemoryCache();
+var mqueueproducer = new MQueuProducerWorker<Feed>();
 
 CultureInfo culture = new("en-US");
 
@@ -145,6 +146,7 @@ Parallel.ForEach(authorIds, new ParallelOptions { MaxDegreeOfParallelism = 1000 
         {
 
             var report = kafkaproducer.ProduceAsync(feeds[i]).GetAwaiter().GetResult();
+            mqueueproducer.ProduceAsync(feeds[i]).GetAwaiter().GetResult();
             Console.WriteLine("Produced: {0}", report.Value);
 
         }
