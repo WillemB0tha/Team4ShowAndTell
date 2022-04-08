@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Xml.Linq;
 using Confluent.Kafka;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Caching.Memory;
 using Producer;
 
 var kafkaproducer = new KafkaProducerWorker<Feed>();
@@ -108,21 +109,8 @@ List<string> authorIds = new List<string>()
 
 Parallel.ForEach(authorIds, new ParallelOptions { MaxDegreeOfParallelism = 1000 }, author =>
 {
-    XDocument authorDoc;
-    if (!_memoryCache.TryGetValue(author, out XDocument cacheValue))
-    {
-        cacheValue = XDocument.Load("https://www.c-sharpcorner.com/members/" + author + "/rss");
-        if (authorDoc == null)
-        {
-            Console.WriteLine("Bad Bad, very bad");
-        }
-        var cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetSlidingExpiration(TimeSpan.FromSeconds(3));
-
-        _memoryCache.Set(author, authorDoc, cacheEntryOptions);
-    }
-
-    authorDoc = cacheValue;
+    XDocument authorDoc = XDocument.Load("https://www.c-sharpcorner.com/members/" + author + "/rss");
+   
 
     var entries = from item in authorDoc.Root.Descendants().First(i => i.Name.LocalName == "channel").Elements().Where(i => i.Name.LocalName == "item")
                   select new Feed
@@ -137,7 +125,7 @@ Parallel.ForEach(authorIds, new ParallelOptions { MaxDegreeOfParallelism = 1000 
 
     List<Feed> feeds = entries.OrderByDescending(o => o.PubDate).ToList();
 
-    Console.WriteLine("Feeds Found, {0} for Author {1}", feeds.Count, author); cacheValue = author;
+    Console.WriteLine("Feeds Found, {0} for Author {1}", feeds.Count, author); 
 
     for (int i = 0; i < feeds.Count; i++)
     {

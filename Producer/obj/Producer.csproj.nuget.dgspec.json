@@ -56,6 +56,10 @@
             "KubeMQ.SDK.csharp": {
               "target": "Package",
               "version": "[1.5.2, )"
+            },
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[6.0.1, )"
             }
           },
           "imports": [
