@@ -45,10 +45,10 @@ public class ConsumerWorker<T>
                     }
                 }
             });
-            
+
             consumer.Close();
         }
     }
-    
-    
+
+
 }
