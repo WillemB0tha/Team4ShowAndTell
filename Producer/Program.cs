@@ -7,6 +7,7 @@ using Producer;
 
 var kafkaproducer = new KafkaProducerWorker<Feed>();
 var mqueueproducer = new KafkaProducerWorker<Feed>();
+var _memoryCache = new MemoryCache();
 
 CultureInfo culture = new("en-US");
 
