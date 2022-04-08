@@ -1,4 +1,4 @@
-version: "3"
+version: "3.9"
 
 services:
   zookeeper:
@@ -10,7 +10,6 @@ services:
       - kafka_net
   kafka:
     image: wurstmeister/kafka
-    container_name: kafka
     depends_on:
       - zookeeper
     restart: on-failure
@@ -32,6 +31,46 @@ services:
       ACCEPT_EULA: "Y"
     networks:
       - kafka_net
+    
+  
+ # producer:
+ #   build:
+ #     context: ./
+ #     dockerfile: Producer.Dockerfile
+ #   networks:
+ #    - kafka_net
+ #   depends_on:
+ #     - kafka
+ #   deploy:
+ #    replicas: 5
+  
+  #consumer:
+  #  build:
+  #    context: ./
+  #    dockerfile: Consumer.Dockerfile
+  #  networks:
+  #    - kafka_net
+  #  depends_on:
+  #    - kafka
+  #  deploy:
+  #    replicas: 5
+
+  kubemq: 
+    image: kubemq/kubemq
+    networks:
+      - kafka_net
+    ports: 
+      - 8080:8080
+      - 50000:50000
+      - 9090:9090
+    environment:
+      KUBEMQ_TOKEN: "ABC1234"
+    volumes:
+      - kubemq
+
+
 networks:
   kafka_net:
     driver: "bridge"
+volumes:
+  kubemq:

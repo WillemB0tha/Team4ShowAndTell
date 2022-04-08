@@ -52,6 +52,10 @@
             "HtmlAgilityPack": {
               "target": "Package",
               "version": "[1.11.42, )"
+            },
+            "KubeMQ.SDK.csharp": {
+              "target": "Package",
+              "version": "[1.5.2, )"
             }
           },
           "imports": [
