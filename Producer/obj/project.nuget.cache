@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "bWjfye6CUBHT/kKWAmQWjBgfoCEoHZTMpQOCK1vWm1Gv1Pyz/YOeqefpIKTc8yZJpp96X+uMyJMkxhiXXQRtGw==",
+  "dgSpecHash": "NGxBBsHaDHuWwCXsAk0K1TE2Na7YORr9bBiJp1KcUiviZDx4qj5KoHtlpFBL53p8Mis1wbUACu7H904qG01zdg==",
   "success": true,
-  "projectFilePath": "D:\\Hackathons\\08042022\\Team4ShowAndTell\\Producer\\Producer.csproj",
+  "projectFilePath": "C:\\Users\\snipe\\source\\repos\\Team4ShowAndTell\\Producer\\Producer.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\JacquesBronkhorst\\.nuget\\packages\\confluent.kafka\\1.8.2\\confluent.kafka.1.8.2.nupkg.sha512",
-    "C:\\Users\\JacquesBronkhorst\\.nuget\\packages\\htmlagilitypack\\1.11.42\\htmlagilitypack.1.11.42.nupkg.sha512",
-    "C:\\Users\\JacquesBronkhorst\\.nuget\\packages\\librdkafka.redist\\1.8.2\\librdkafka.redist.1.8.2.nupkg.sha512",
-    "C:\\Users\\JacquesBronkhorst\\.nuget\\packages\\system.memory\\4.5.0\\system.memory.4.5.0.nupkg.sha512"
+    "C:\\Users\\snipe\\.nuget\\packages\\confluent.kafka\\1.8.2\\confluent.kafka.1.8.2.nupkg.sha512",
+    "C:\\Users\\snipe\\.nuget\\packages\\htmlagilitypack\\1.11.42\\htmlagilitypack.1.11.42.nupkg.sha512",
+    "C:\\Users\\snipe\\.nuget\\packages\\librdkafka.redist\\1.8.2\\librdkafka.redist.1.8.2.nupkg.sha512",
+    "C:\\Users\\snipe\\.nuget\\packages\\system.memory\\4.5.0\\system.memory.4.5.0.nupkg.sha512"
   ],
   "logs": []
 }
