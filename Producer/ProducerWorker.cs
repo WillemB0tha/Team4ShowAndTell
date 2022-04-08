@@ -23,13 +23,13 @@ public class ProducerWorker<T>
         };
     }
     
-    public async Task ProduceAsync(T data)
+    public async Task<DeliveryResult<Null, T>> ProduceAsync(T data)
     {
         using (var producer = new ProducerBuilder<Null, T>(GetProducerConfig())
                    .SetValueSerializer(new ValueSerializer<T>())
                    .Build())
         {
-            await producer.ProduceAsync(_topic, new Message<Null, T> { Value = data });
+           return  await producer.ProduceAsync(_topic, new Message<Null, T> { Value = data });
         }
     }
 }

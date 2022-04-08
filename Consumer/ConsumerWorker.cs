@@ -22,7 +22,7 @@ public class ConsumerWorker<T>
         {
             BootstrapServers = $"{_host}:{_port}",
             GroupId = "CornerData",
-            AutoOffsetReset = AutoOffsetReset.Earliest;
+            AutoOffsetReset = AutoOffsetReset.Earliest
         };
     }
 

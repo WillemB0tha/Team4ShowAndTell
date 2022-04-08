@@ -41,10 +41,11 @@ foreach (var author in authorIds)
         };
 
     List<Feed> feeds = entries.OrderByDescending(o => o.PubDate).ToList();
-
+    Console.WriteLine("Feeds Found, {0} for Author {1}", feeds.Count, author);
     for (int i = 0; i < feeds.Count; i++)
     {
-        producer.ProduceAsync(feeds[i]).GetAwaiter().GetResult();
+       var report = producer.ProduceAsync(feeds[i]).GetAwaiter().GetResult();
+       Console.WriteLine("Produced: {0}", report.Value);
     }
 }
 

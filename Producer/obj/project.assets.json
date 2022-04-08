@@ -293,23 +293,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\snipe\\.nuget\\packages\\": {},
-    "D:\\Microsoft\\SDKs\\NuGetPackages": {}
+    "C:\\Users\\JacquesBronkhorst\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\snipe\\source\\repos\\Team4ShowAndTell\\Producer\\Producer.csproj",
+      "projectUniqueName": "D:\\Hackathons\\08042022\\Team4ShowAndTell\\Producer\\Producer.csproj",
       "projectName": "Producer",
-      "projectPath": "C:\\Users\\snipe\\source\\repos\\Team4ShowAndTell\\Producer\\Producer.csproj",
-      "packagesPath": "C:\\Users\\snipe\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\snipe\\source\\repos\\Team4ShowAndTell\\Producer\\obj\\",
+      "projectPath": "D:\\Hackathons\\08042022\\Team4ShowAndTell\\Producer\\Producer.csproj",
+      "packagesPath": "C:\\Users\\JacquesBronkhorst\\.nuget\\packages\\",
+      "outputPath": "D:\\Hackathons\\08042022\\Team4ShowAndTell\\Producer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\Microsoft\\SDKs\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\snipe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\JacquesBronkhorst\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
