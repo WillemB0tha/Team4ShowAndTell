@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "cGcqdZd9njhG/DmL0AasGPwrzLRDtP9gFNKhtxlsB8T27hUFrBAjg4JaA9C1+e4168FlwMXOzOUA5y3/7dxzsg==",
+  "dgSpecHash": "bWjfye6CUBHT/kKWAmQWjBgfoCEoHZTMpQOCK1vWm1Gv1Pyz/YOeqefpIKTc8yZJpp96X+uMyJMkxhiXXQRtGw==",
   "success": true,
   "projectFilePath": "D:\\Hackathons\\08042022\\Team4ShowAndTell\\Producer\\Producer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\JacquesBronkhorst\\.nuget\\packages\\confluent.kafka\\1.8.2\\confluent.kafka.1.8.2.nupkg.sha512",
+    "C:\\Users\\JacquesBronkhorst\\.nuget\\packages\\htmlagilitypack\\1.11.42\\htmlagilitypack.1.11.42.nupkg.sha512",
     "C:\\Users\\JacquesBronkhorst\\.nuget\\packages\\librdkafka.redist\\1.8.2\\librdkafka.redist.1.8.2.nupkg.sha512",
     "C:\\Users\\JacquesBronkhorst\\.nuget\\packages\\system.memory\\4.5.0\\system.memory.4.5.0.nupkg.sha512"
   ],

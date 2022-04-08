@@ -1,0 +1,35 @@
+﻿using Confluent.Kafka;
+
+namespace Producer;
+
+public class ProducerWorker<T>
+{
+    readonly string? _host;
+    readonly int _port;
+    readonly string? _topic;
+
+    public ProducerWorker()
+    {
+        _host = "localhost";
+        _port = 9092;
+        _topic = "producer_logs";
+    }
+    
+    ProducerConfig GetProducerConfig()
+    {
+        return new ProducerConfig
+        {
+            BootstrapServers = $"{_host}:{_port}"
+        };
+    }
+    
+    public async Task ProduceAsync(T data)
+    {
+        using (var producer = new ProducerBuilder<Null, T>(GetProducerConfig())
+                   .SetValueSerializer(new ValueSerializer<T>())
+                   .Build())
+        {
+            await producer.ProduceAsync(_topic, new Message<Null, T> { Value = data });
+        }
+    }
+}
