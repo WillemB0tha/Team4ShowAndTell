@@ -108,12 +108,23 @@ List<string> authorIds = new List<string>()
 
 Parallel.ForEach(authorIds, new ParallelOptions { MaxDegreeOfParallelism = 1000 }, author =>
 {
-    XDocument doc = XDocument.Load("https://www.c-sharpcorner.com/members/" + author + "/rss");
-    if (doc == null)
+    XDocument authorDoc;
+    if (!_memoryCache.TryGetValue(author, out XDocument cacheValue))
     {
-        Console.WriteLine("Bad Bad, very bad");
+        cacheValue = XDocument.Load("https://www.c-sharpcorner.com/members/" + author + "/rss");
+        if (authorDoc == null)
+        {
+            Console.WriteLine("Bad Bad, very bad");
+        }
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetSlidingExpiration(TimeSpan.FromSeconds(3));
+
+        _memoryCache.Set(author, authorDoc, cacheEntryOptions);
     }
-    var entries = from item in doc.Root.Descendants().First(i => i.Name.LocalName == "channel").Elements().Where(i => i.Name.LocalName == "item")
+
+    authorDoc = cacheValue;
+
+    var entries = from item in authorDoc.Root.Descendants().First(i => i.Name.LocalName == "channel").Elements().Where(i => i.Name.LocalName == "item")
                   select new Feed
                   {
                       Content = item.Elements().First(i => i.Name.LocalName == "description").Value,
@@ -125,7 +136,8 @@ Parallel.ForEach(authorIds, new ParallelOptions { MaxDegreeOfParallelism = 1000 
                   };
 
     List<Feed> feeds = entries.OrderByDescending(o => o.PubDate).ToList();
-    Console.WriteLine("Feeds Found, {0} for Author {1}", feeds.Count, author);
+
+    Console.WriteLine("Feeds Found, {0} for Author {1}", feeds.Count, author); cacheValue = author;
 
     for (int i = 0; i < feeds.Count; i++)
     {
