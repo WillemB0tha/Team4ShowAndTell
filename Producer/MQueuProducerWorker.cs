@@ -8,7 +8,7 @@ public class MQueuProducerWorker<T>
     readonly int _port;
     readonly string? _topic;
 
-    public ProducerWorker()
+    public MQueuProducerWorker()
     {
         _host = "localhost";
         _port = 9092;

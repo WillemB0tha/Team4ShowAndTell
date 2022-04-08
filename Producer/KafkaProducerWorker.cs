@@ -8,7 +8,7 @@ public class KafkaProducerWorker<T>
     readonly int _port;
     readonly string? _topic;
 
-    public ProducerWorker()
+    public KafkaProducerWorker()
     {
         _host = "localhost";
         _port = 9092;
@@ -29,23 +29,15 @@ public class KafkaProducerWorker<T>
                    .SetValueSerializer(new ValueSerializer<T>())
                    .Build())
         {
-            Console.WriteLine("\nProducer loop started...\n\n");
-
-            var message = $"Character #{character} sent at {DateTime.Now:yyyy-MM-dd_HH:mm:ss}";
-
-
-            var deliveryReport = await producer.ProduceAsync(_topic, new Message<Null, T> { Value = z });
-
-            Console.WriteLine($"Message sent (value: '{message}'). Delivery status: {deliveryReport.Status}");
-
+            var deliveryReport = await producer.ProduceAsync(_topic, new Message<Null, T> { Value = data });
             if (deliveryReport.Status != PersistenceStatus.Persisted)
             {
                 // delivery might have failed after retries. This message requires manual processing.
                 Console.WriteLine(
-                    $"ERROR: Message not ack'd by all brokers (value: '{message}'). Delivery status: {deliveryReport.Status}");
+                    $"ERROR: Message not ack'd by all brokers (value: '{data}'). Delivery status: {deliveryReport.Status}");
             }
 
-            return z;
+            return deliveryReport;
         }
     }
 }
