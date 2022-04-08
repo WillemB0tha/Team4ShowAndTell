@@ -4,7 +4,9 @@ using System.Xml.Linq;
 using HtmlAgilityPack;
 using Producer;
 
-var producer = new ProducerWorker<Feed>();
+var kafkaproducer = new KafkaProducerWorker<Feed>();
+var mqueueproducer = new KafkaProducerWorker<Feed>();
+
 CultureInfo culture = new("en-US");
 
 List<string> authorIds = new List<string>()
@@ -46,8 +48,10 @@ Parallel.ForEach(authorIds, new ParallelOptions { MaxDegreeOfParallelism = 100 }
     {
         try
         {
-            var report = producer.ProduceAsync(feeds[i]).GetAwaiter().GetResult();
+            var report = kafkaproducer.ProduceAsync(feeds[i]).GetAwaiter().GetResult();
             Console.WriteLine("Produced: {0}", report.Value);
+
+        }
         catch (ProduceException<long, string> e)
         {
             Console.WriteLine($"Permanent error: {e.Message} for message (value: '{e.DeliveryResult.Value}')");
