@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Text.Json;
 using Confluent.Kafka;
 
 namespace Consumer;
@@ -13,7 +14,7 @@ public class ConsumerWorker<T>
     {
         _host = "localhost";
         _port = 9092;
-        _topic = "ProducerLog";
+        _topic = "producer_logs";
     }
 
     ConsumerConfig GetConsumerConfig()
@@ -21,12 +22,12 @@ public class ConsumerWorker<T>
         return new ConsumerConfig()
         {
             BootstrapServers = $"{_host}:{_port}",
-            GroupId = "CornerData",
+            GroupId = "Foo",
             AutoOffsetReset = AutoOffsetReset.Earliest
         };
     }
 
-    public async Task Consume()
+    public async Task ConsumeAsync()
     {
         using (var consumer = new ConsumerBuilder<Ignore, T>(GetConsumerConfig())
                    .SetValueDeserializer(new ValueDeserializer<T>()).Build())
@@ -38,9 +39,9 @@ public class ConsumerWorker<T>
                 while (true)
                 {
                     var consumerResult = consumer.Consume(default(CancellationToken));
-                    if (consumerResult.Message.Value is Feed)
+                    if (consumerResult.Message.Value is Feed feed)
                     {
-                        //Save Here
+                        Console.WriteLine(JsonSerializer.Serialize(feed));
                     }
                 }
             });
