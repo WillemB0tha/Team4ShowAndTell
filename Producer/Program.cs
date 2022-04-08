@@ -115,8 +115,14 @@ Parallel.ForEach(authorIds, new ParallelOptions { MaxDegreeOfParallelism = 1000 
         {
             Console.WriteLine("Bad Bad, very bad");
         }
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetSlidingExpiration(TimeSpan.FromSeconds(3));
+
+        _memoryCache.Set(author, authorDoc, cacheEntryOptions);
     }
+
     authorDoc = cacheValue;
+
     var entries = from item in authorDoc.Root.Descendants().First(i => i.Name.LocalName == "channel").Elements().Where(i => i.Name.LocalName == "item")
                   select new Feed
                   {
@@ -131,19 +137,6 @@ Parallel.ForEach(authorIds, new ParallelOptions { MaxDegreeOfParallelism = 1000 
     List<Feed> feeds = entries.OrderByDescending(o => o.PubDate).ToList();
 
     Console.WriteLine("Feeds Found, {0} for Author {1}", feeds.Count, author); cacheValue = author;
-
-    var cacheEntryOptions = new MemoryCacheEntryOptions()
-        .SetSlidingExpiration(TimeSpan.FromSeconds(3));
-
-    XDocument doc = XDocument.Load("https://www.c-sharpcorner.com/members/" + author + "/rss");
-    if (doc == null)
-    {
-        Console.WriteLine("Bad Bad, very bad");
-    }
-
-    authorDoc = doc;
-
-    _memoryCache.Set(author, authorDoc, cacheEntryOptions);
 
     for (int i = 0; i < feeds.Count; i++)
     {
