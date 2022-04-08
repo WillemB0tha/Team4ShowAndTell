@@ -4,97 +4,44 @@ using Confluent.Kafka;
 
 namespace Consumer;
 
-public class ConsumerWorker<T>
+public class ConsumerWorkerMQ<T>
 {
-    private readonly string? _host;
-    private readonly int _port;
-
     private readonly string _queueName;
-    private readonly string KubeMQServerAddress;
+    private readonly string _clientID;
+    private readonly string _kubeMQServerAddress;
 
-    public ConsumerWorker()
-    {
-        KubeMQServerAddress = "localhost";
-        _port = 50000;
-        _queueName = "queue-dead-letter";
-    }
+    private readonly KubeMQ.SDK.csharp.Queue.Queue _queue = null;
 
-    ConsumerConfig GetConsumerConfig()
+    public ConsumerWorkerMQ()
     {
-        return new ConsumerConfig()
-        {
-            BootstrapServers = $"{_host}:{_port}",
-            GroupId = "Foo",
-            AutoOffsetReset = AutoOffsetReset.Earliest
-        };
+        _queueName = "service_log";
+        _clientID = "TestClient";
+        _kubeMQServerAddress = "localhost:50000";
+
+        _queue = new KubeMQ.SDK.csharp.Queue.Queue(_queueName, _clientID, _kubeMQServerAddress);
     }
 
     public async Task ConsumeAsync()
     {
-        KubeMQServerAddress = "localhost";
-
-        var receiver = new KubeMQ.SDK.csharp.Queue.Queue("queue", "Csharp-sdk-cookbook-queues-stream-client",
-                KubeMQServerAddress + ":" + port);
-        var transaction = receiver.CreateTransaction();
-        KubeMQ.SDK.csharp.Queue.Stream.TransactionMessagesResponse resRec;
         try
         {
-            resRec = transaction.Receive(1, 5);
-            if (resRec.IsError)
-            {
-                Console.WriteLine($"Message dequeue error, error:{resRec.Error}");
-                transaction.Close();
-
-            }
-            else
-            {
-                Console.WriteLine(
-                    $"message received, body:{KubeMQ.SDK.csharp.Tools.Converter.FromByteArray(resRec.Message.Body)}, rejecting");
-                try
-                {
-                    var rejRes = transaction.RejectMessage(resRec.Message.Attributes.Sequence);
-                    if (rejRes.IsError)
-                    {
-                        Console.WriteLine($"Error in reject Message, error:{rejRes.Error}");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Reject completed");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-                finally
-                {
-                    transaction.Close();
-                }
-            }
-
-        }
-        catch (System.Exception ex)
-        {
-            Console.WriteLine($"Message Receive error, error:{ex.Message}");
-        }
-
-        try
-        {
-            var msg = queue.Pull("queue-dead-letter", 1, 1);
+            var msg = _queue.ReceiveQueueMessages();
             if (msg.IsError)
             {
                 Console.WriteLine($"message dequeue error, error:{msg.Error}");
+                return;
             }
 
+            Console.WriteLine($"Received {msg.MessagesReceived} Messages:");
+            foreach (var item in msg.Messages)
             {
-                Console.WriteLine($"{msg.Messages.Count()} messages received from dead-letter queue");
+                Console.WriteLine(
+                    $"MessageID: {item.MessageID}, Body:{KubeMQ.SDK.csharp.Tools.Converter.FromByteArray(item.Body)}");
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e.Message);
+            Console.WriteLine(ex.Message);
         }
-
     }
 }

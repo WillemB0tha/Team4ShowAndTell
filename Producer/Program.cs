@@ -8,7 +8,6 @@ using Microsoft.Extensions.Caching.Memory;
 using Producer;
 
 var kafkaproducer = new KafkaProducerWorker<Feed>();
-var _memoryCache = new MemoryCache();
 var mqueueproducer = new MQueuProducerWorker<Feed>();
 
 CultureInfo culture = new("en-US");
